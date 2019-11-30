@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>班级饮料抽奖</title>
+	<script type="text/javascript">
+		var st = 0;//0-初始，1-进行, 2-结束
+		var tmr;//定时器，用于呈现动态抽奖
+		var n; //总人数
+		var x; //中奖人数
+		
+		function setT(){
+			tmr = setInterval(show,200);
+			var b=document.getElementById("b");
+			b.disabled=false;
+		}
+		function stopT(){
+			clearInterval(tmr);
+		}
+		function show(){
+			var r = document.getElementById("x");
+			r.value = randRange(1,n+1);
+		}
+		function lott(){
+			stopT();
+			var r = document.getElementById("x");
+			addMsg(r.value);
+
+			x -= 1;
+			if(x==0){
+				st=2;
+				var b=document.getElementById("b");
+				b.value="已结束";
+			}else{
+				setTimeout("setT()",2000);
+			}
+		}
+
+
+		function randRange(x,y){
+			console.log(x,y);
+			var r = Math.random();
+			console.log(r);
+			return Math.floor(r*(y-x)+x);
+		}
+		function start(b) {
+			switch(st){
+			case 0:
+			n = Number(document.getElementById("total").value);
+			x = Number(document.getElementById("bonus").value);
+			addMsg("在"+n+"个人中抽取"+x+"个获奖者");
+			st = 1;
+			b.value = "抽奖";
+			setT();
+			break;
+			case 1:
+			b.disabled=true;
+			lott();
+			break;
+			}
+		}
+
+		function addMsg(msg){
+		var m = document.getElementById("result");
+		if(m.value == ""){
+			m.value = msg;
+		}else{
+		m.value += "\n"+msg;
+	}
+
+
+
+
+	}
+	</script>
+</head>
+<body>
+<form>
+<table>
+	<tr>
+		<td>设定总人数</td>
+		<td><input id="total" type="number" value=33 min=0 max=40 />
+		</td>
+	</tr>
+	<tr>
+		<td>饮料总数量</td>
+		<td><input id="bonus" type="number" name="" value=3 min="3" max="15"></td>
+	</tr>
+	<tr>
+		<td><input id="x" type="text"  value="0" readonly="true" size="7"></td>
+		<td><input id="b" type="button" name="" value="开始" onclick="start(this)"></td>
+	</tr>
+	<tr>
+		<td colspan=2>
+			<textarea id="result" style="overflow: scroll;overflow-x: hidden;height: 64px;"></textarea>
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>
